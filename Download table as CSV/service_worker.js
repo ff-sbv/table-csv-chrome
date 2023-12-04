@@ -1,9 +1,18 @@
-chrome.runtime.onInstalled.addListener(()=> {
-	chrome.contextMenus.create({ id: "DLCSV", title: "Download table as CSV", type: "normal", contexts: ["page"]});	
+async function getTabId() {
+	let queryOptions = { active: true, currentWindow: true };
+	let tabs = await chrome.tabs.query(queryOptions);
+	return tabs[0].id;
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+	chrome.contextMenus.create({ id: "DLCSV", title: "Download table as CSV", type: "normal", contexts: ["page"]});
 });
-chrome.contextMenus.onClicked.addListener((item, tab)=> {
+chrome.contextMenus.onClicked.addListener(async (item, tab) => {
 		"use strict";
-		if(item.menuItemId == "DLCSV"){	
-			chrome.tabs.executeScript(tab.id, {code: "dltcsvRightClick = true;", allFrames:true}, ()=> { chrome.tabs.executeScript(tab.id, {file: "downloadcsv.js", allFrames:true});});			
-		}	
+		if(item.menuItemId == "DLCSV"){
+			chrome.scripting.executeScript({
+				target: { tabId: (await getTabId()) },
+				files : [ "downloadcsv.js" ],
+			})
+		}
 });

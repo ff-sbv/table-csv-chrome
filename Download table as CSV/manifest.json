@@ -3,12 +3,18 @@
 	"description": "Download HTML tables in MS Excel style CSV format.",
 	"version": "2",
 	"manifest_version": 3,
-	"permissions": ["contextMenus", "activeTab", "storage"],
+	"permissions": [
+		"contextMenus",
+		"activeTab",
+		"scripting",
+		"storage"
+	],
+	"host_permissions": ["<all_urls>"],
 	"background": {
     		"service_worker": "service_worker.js",
     		"type": "module"
 	},
-	"browser_action": {
+	"action": {
 		"default_popup": "popup.html"
 	},
 	"icons": {
